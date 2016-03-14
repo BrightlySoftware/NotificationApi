@@ -95,12 +95,21 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 ## Request Detail [/notifications/{id}]
 
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+
 ### GET
 
 + Response 200 (application/json)
     + Attributes (Request)
 
-## Message Collection [/notifications/{id}/messages]
+## Message Collection [/notifications/{id}/messages{?page,pagesize,orderby}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
 
 ### GET
 
@@ -114,6 +123,10 @@ Any response that does not provide a ```200 OK``` response code should be treate
     + Attributes (Message Create)
 
 ## Message Detail [/notification/{id}/messages/{messageId}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + messageId: 1234567890 (required, number) - ID of the message in the form of a long
 
 ### GET
 
@@ -130,17 +143,27 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 ## Message by Provider [/notification/messageByProviderId/{providerId}/{providerMessageId}]
 
++ Parameters
+    + providerId: 1234567890 (required, number) - ID of the message provider in the form of an integer
+
 ### GET
 
 + Response 200 (application/json)
     + Attributes (Message)
 
-## Template Collection [/notifications/{id}/templates]
+## Template Collection [/notifications/{id}/templates{?page,pagesize,orderby}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of an integer
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
 
 ### GET
 
 + Response 200 (application/json)
-    + Attributes (Template)
+    + Attributes (Base Collection Response)
+        + `data` (array[Template], required)
 
 # Data Structures
 ## Base Collection Response (object)
