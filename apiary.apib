@@ -119,8 +119,11 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 ### POST
 
-+ Response 201 (application/json)
++ Request (application/json)
     + Attributes (Message Create)
+
++ Response 201 (application/json)
+    + Attributes (Message)
 
 ## Message Detail [/notification/{id}/messages/{messageId}]
 
@@ -145,6 +148,7 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 + Parameters
     + providerId: 1234567890 (required, number) - ID of the message provider in the form of an integer
+    + providerMessageId: 1234567890 (required, number) - ID of the message in the form of an integer
 
 ### GET
 
