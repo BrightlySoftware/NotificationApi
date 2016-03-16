@@ -81,7 +81,100 @@ Any response that does not provide a ```200 OK``` response code should be treate
             
     + Attributes (Heartbeat)
 
+# Group Notifications
+
+## Request Collection [/notifications]
+
+### POST
+
++ Request (application/json)
+    + Attributes (Request Create)
+
++ Response 201 (application/json)
+    + Attributes (Request)
+
+## Request Detail [/notifications/{id}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Request)
+
+## Message Collection [/notifications/{id}/messages{?page,pagesize,orderby}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Base Collection Response)
+        + `data` (array[Message], required)
+
+### POST
+
++ Request (application/json)
+    + Attributes (Message Create)
+
++ Response 201 (application/json)
+    + Attributes (Message)
+
+## Message Detail [/notification/{id}/messages/{messageId}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + messageId: 1234567890 (required, number) - ID of the message in the form of a long
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+### PUT
+
++ Request (application/json)
+    + Attributes (Message)
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+## Message by Provider [/notification/messageByProviderId/{providerId}/{providerMessageId}]
+
++ Parameters
+    + providerId: 1234567890 (required, number) - ID of the message provider in the form of an integer
+    + providerMessageId: 1234567890 (required, number) - ID of the message in the form of an integer
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+## Template Collection [/notifications/{id}/templates{?page,pagesize,orderby}]
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of an integer
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Base Collection Response)
+        + `data` (array[Template], required)
+
 # Data Structures
+## Base Collection Response (object)
++ `page`: 1 (number, required) - The current page provided in the response data.
++ `pageSize`: 1000 (number, required) - The page size returned in the response data.
++ `dataSize`: 1000 (number, required) - The total records returned in the response.
++ `total`: 2000 (number, required) - The total number of records available in the collection.
 
 ## System Information (object)
 + `application`: `Dude Notification Api` (string, required) - The name of the application.
@@ -97,6 +190,56 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 ## Heartbeat (object)
 Represents a heartbeat response.
-
 ### Properties
 + `vitalCheck`: true (boolean, required) - Vital check to ensure something is online.
+
+## Request Create(object)
++ `accountId`: 1 (number, optional) - ID of the account in the form of an integer.
++ `event`: EventName (string, required) - The event that triggered the request.
++ `triggeredBy`: System (string, required) - Whomever the request was triggered by.
++ `extraData` (object, required) - Dictionary of extra data on the request.
++ `recipients` (array[Recipient], optional) - The recipients of the request.
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the request was created.
+
+## Request (Request Create)
++ `id`: 1 (number, required) - The ID of the request.
+
+## Recipient (object)
++ `id`: 1 (number, required) - The ID of the recipient.
++ `userId`: 1 (number, required) - The third party system identifier of the recipient.
++ `firstName`: John (string, required) - The first name of the recipient.
++ `lastName`: Smith (string, required) - The last name of the recipient.
++ `mobile`: 012-345-6789 (string, required) - The mobile phone number of the recipient.
++ `email`: john.smith@dudesolutions.io (string, required) - The email address of the recipient.
++ `shouldEmail` : true (boolean, required) - Indicated whether the system should email the recipient.
+
+## Message Create(object)
++ `requestId`: 1 (number, required) - The ID of the notification request.
++ `defaultTemplateId`: 1 (number, optional) - The ID of the template.
++ `type`: None (enum[string], required) - The message type.
+    + `Email`
++ `recipientId`: 1 (number, required) - The ID of the recipient.
++ `status`: None (enum[string], required) - The notification status.
+    + `InternalQueued`
+    + `InternalError`
+    + `ProviderQueuePending`
+    + `ProviderQueued`
+    + `Sent`
+    + `NotDeliverable`
+    + `Opened`
+    + `ProviderError`
++ `providerId`: 1 (number, optional) - The ID of the provider.
++ `providerStatus`: none (string, required) - The status of the provider.
++ `providerErrorReason`: none (string, required) - The provider error reason.
++ `subject`: Msg Subject (string, required) - The subject of the message.
++ `body`: Hello World (string, required) - The body of the message.
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the message was created
+
+## Message (Message Create)
++ `id`: 1 (number, required) - The ID of the message.
+
+## Template
++ `id`: 1 (number, required) - The ID of the message.
++ `type`: Email (string, required) - The type of the template.
++ `subject`: Msg Subject (string, required) - The subject of the template.
++ `body`: Hello World (string, required) - The body of the template.
