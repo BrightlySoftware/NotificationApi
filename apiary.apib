@@ -69,7 +69,7 @@ Retrieve api version, vitals, links, etc.
 # Group Heartbeat
 Check health of dependent services.
 
-## Heartbeat [/heartbeat]
+## Heartbeat Check [/heartbeat]
 The heartbeat is exposed and provided to check for availability of the service.
 Any response that does not provide a ```200 OK``` response code should be treated as an error.
 
@@ -110,7 +110,7 @@ This endpoint allows for existing notification requests to be found and returned
     + Attributes (Request)
 
 ## Message Collection [/notifications/{id}/messages{?page,pagesize,orderby}]
-The message collection allows for new notification messages to be created or for existing ones to be returned.
+The message collection allows for existing notification messages to be returned.
 
 + Parameters
     + id: 1234567890 (required, number) - ID of the notification request in the form of a long
@@ -123,6 +123,12 @@ The message collection allows for new notification messages to be created or for
 + Response 200 (application/json)
     + Attributes (Base Collection Response)
         + `data` (array[Message], required)
+
+## Message Create [/notifications/{id}/messages]
+This endpoint allows for new notification messages to be created.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
 
 ### POST
 
