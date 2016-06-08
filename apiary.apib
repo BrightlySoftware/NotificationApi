@@ -1,14 +1,16 @@
 FORMAT: 1A
 HOST: https://v1.notify.dudesolutions.io
 
+USECOMMONSDKLIBRARY: TRUE
 GENERATEASYNCCODE: TRUE
+GENERATEINTERFACES: TRUE
 USEMETHODPREFIX: TRUE
 USEMODELPOSTFIX: FALSE
 USECONTROLLERPOSTFIX: FALSE
 USEENUMPOSTFIX: FALSE
 USECONSTRUCTORSFORCONFIG: TRUE
-CSHARPDEFAULTNAMESPACE: DSI.SDK.notify
-JAVADEFAULTNAMESPACE: io.dudesolutions.notify
+CSHARPDEFAULTNAMESPACE: DSI.SDK.Notification
+JAVADEFAULTNAMESPACE: io.dudesolutions.notification
 BRANDLABEL: Dude Solutions, Inc.
 USERAGENT: Dude SDK
 
@@ -53,9 +55,21 @@ None at this time
 ## Documentation Notes
 In Progress
 
-# Group Heartbeat
+# Group System Information
+Check API System Information.
 
-## Heartbeat [/heartbeat]
+## S.I. Check [/]
+Retrieve api version, vitals, links, etc.
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (System Information)
+
+# Group Heartbeat
+Check health of dependent services.
+
+## Heartbeat Check [/heartbeat]
 The heartbeat is exposed and provided to check for availability of the service.
 Any response that does not provide a ```200 OK``` response code should be treated as an error.
 
@@ -63,17 +77,214 @@ Any response that does not provide a ```200 OK``` response code should be treate
 
 + Response 200 (application/json)
     + Headers
-    
+
             X-Dude-Api-Limit: Unlimited or Number
             X-Dude-Api-Remaining: Unlimited or Number
             X-Dude-Api-Server: Api Server ID
-            
+
     + Attributes (Heartbeat)
 
+# Group Notifications
+Check notification endpoints.
+
+## Request Create [/notifications]
+This endpoint allows for new notification requests to be created.
+
+### POST
+
++ Request (application/json)
+    + Attributes (Base Request)
+
++ Response 201 (application/json)
+    + Attributes (Request)
+
+## Request Detail [/notifications/{id}]
+This endpoint allows for existing notification requests to be found and returned.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Request)
+
+## Message Collection [/notifications/{id}/messages{?page,pagesize,orderby}]
+The message collection allows for existing notification messages to be returned.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Base Collection Response)
+        + `data` (array[Message], required)
+
+## Message Create [/notifications/{id}/messages]
+This endpoint allows for new notification messages to be created.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+
+### POST
+
++ Request (application/json)
+    + Attributes (Base Message)
+
++ Response 201 (application/json)
+    + Attributes (Message)
+
+## Message Detail [/notification/{id}/messages/{messageId}]
+This endpoint allows for existing notification messages to be found and updated or returned.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of a long
+    + messageId: 1234567890 (required, number) - ID of the message in the form of a long
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+### PUT
+
++ Request (application/json)
+    + Attributes (Base Message)
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+## Provider Message Detail [/notification/messageByProviderId/{providerId}/{providerMessageId}]
+This endoint allows for existing messages by providers to be found and returned.
+
++ Parameters
+    + providerId: 1234567890 (required, number) - ID of the message provider in the form of an integer
+    + providerMessageId: 1234567890 (required, number) - ID of the message in the form of an integer
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Message)
+
+## Template Collection [/notifications/{id}/templates{?page,pagesize,orderby}]
+This endpoint allows for existing notification templates to be returned.
+
++ Parameters
+    + id: 1234567890 (required, number) - ID of the notification request in the form of an integer
+    + page: 1 (number, optional) - The page to request from the collection.
+    + pagesize: 1000 (number, optional) - The number of records to load in a page from the collection.
+    + orderby: Quantity asc (string, optional) - A string describing the ordering to perform on the collection.
+
+### GET
+
++ Response 200 (application/json)
+    + Attributes (Base Collection Response)
+        + `data` (array[Template], required)
+
 # Data Structures
+
+## System Information (object)
+Represents the System Information response.
+
+### Properties
++ `application`: `Dude Notification Api` (string, required) - The name of the application.
++ `version` : `1.0.0.0` (string, required) - The assembly version.
++ `apiVersion` : `1.0.0.0` (string, required) - The API version.
++ `vitals` (Heartbeat, required) - The state of the system dependencies.
++ `links` (array[System Links], required) - The API routes.
+
+## System Links (object)
+Represents the API routes.
+
+### Properties
++ `endpoint` : `NotificationRequest` (string, required) - The name of the endpoint.
++ `action` : `Get` (string, required) - The REST action.
++ `route` : `/notifications/{id}` (string, required) - The route to the endpoint.
 
 ## Heartbeat (object)
 Represents a heartbeat response.
 
 ### Properties
 + `vitalCheck`: true (boolean, required) - Vital check to ensure something is online.
+
+## Base Collection Response (object)
+Represents a paged object.
+
+### Properties
++ `page`: 1 (number, required) - The current page provided in the response data.
++ `pageSize`: 1000 (number, required) - The page size returned in the response data.
++ `dataSize`: 1000 (number, required) - The total records returned in the response.
++ `total`: 2000 (number, required) - The total number of records available in the collection.
+
+## Base Request (object)
+Represents a notification request with base properties.
+
+### Properties
++ `accountId`: 1 (number, optional) - ID of the account in the form of an integer.
++ `event`: EventName (string, required) - The event that triggered the request.
++ `triggeredBy`: System (string, required) - Whomever the request was triggered by.
++ `extraData` (object, required) - Dictionary of extra data on the request.
++ `recipients` (array[Recipient], optional) - The recipients of the request.
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the request was created.
+
+## Request (Base Request)
+Represents a notification request with properties required for a create.
+
+### Properties
++ `id`: 1 (number, required) - The ID of the request.
+
+## Recipient (object)
+Represents a notification recipient.
+
+### Properties
++ `id`: 1 (number, required) - The ID of the recipient.
++ `userId`: 1 (number, required) - The third party system identifier of the recipient.
++ `firstName`: John (string, required) - The first name of the recipient.
++ `lastName`: Smith (string, required) - The last name of the recipient.
++ `mobile`: 012-345-6789 (string, required) - The mobile phone number of the recipient.
++ `email`: john.smith@dudesolutions.io (string, required) - The email address of the recipient.
++ `shouldEmail` : true (boolean, required) - Indicated whether the system should email the recipient.
+
+## Base Message (object)
+Represents a notification message with base properties.
+
+### Properties
++ `requestId`: 1 (number, required) - The ID of the notification request.
++ `defaultTemplateId`: 1 (number, optional) - The ID of the template.
++ `type`: None (enum[string], required) - The message type.
+    + `Email`
++ `recipientId`: 1 (number, required) - The ID of the recipient.
++ `status`: None (enum[string], required) - The notification status.
+    + `InternalQueued`
+    + `InternalError`
+    + `ProviderQueuePending`
+    + `ProviderQueued`
+    + `Sent`
+    + `NotDeliverable`
+    + `Opened`
+    + `ProviderError`
++ `providerId`: 1 (number, optional) - The ID of the provider.
++ `providerStatus`: none (string, required) - The status of the provider.
++ `providerErrorReason`: none (string, required) - The provider error reason.
++ `subject`: Msg Subject (string, required) - The subject of the message.
++ `body`: Hello World (string, required) - The body of the message.
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the message was created
+
+## Message (Base Message)
+Represents a notification messages with properties required for a create or update.
+
+### Properties
++ `id`: 1 (number, required) - The ID of the message.
+
+## Template
+Represents a notification template.
+
+### Properties
++ `id`: 1 (number, required) - The ID of the message.
++ `type`: Email (string, required) - The type of the template.
++ `subject`: Msg Subject (string, required) - The subject of the template.
++ `body`: Hello World (string, required) - The body of the template.
