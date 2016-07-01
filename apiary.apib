@@ -258,18 +258,9 @@ Represents a notification message with base properties.
 ### Properties
 + `requestId`: 1 (number, required) - {LONG} The ID of the notification request.
 + `defaultTemplateId`: 1 (number, optional) - {LONG} The ID of the template.
-+ `type`: None (enum[string], required) - The message type.
-    + `Email`
++ `type`: Email (Message Type, required) - The message type.
 + `recipientId`: 1 (number, required) - {LONG} The ID of the recipient.
-+ `status`: None (enum[string], required) - The notification status.
-    + `InternalQueued`
-    + `InternalError`
-    + `ProviderQueuePending`
-    + `ProviderQueued`
-    + `Sent`
-    + `NotDeliverable`
-    + `Opened`
-    + `ProviderError`
++ `status`: InternalQueued (Message Status, required) - The notification status.
 + `providerId`: 1 (number, optional) - {INT} The ID of the provider.
 + `providerStatus`: none (string, required) - The status of the provider.
 + `providerErrorReason`: none (string, required) - The provider error reason.
@@ -291,3 +282,16 @@ Represents a notification template.
 + `type`: Email (string, required) - The type of the template.
 + `subject`: Msg Subject (string, required) - The subject of the template.
 + `body`: Hello World (string, required) - The body of the template.
+
+## Message Type (enum)
++ Email (string)
+
+## Message Status (enum)
++ InternalQueued (string)
++ InternalError (string)
++ ProviderQueuePending (string)
++ ProviderQueued (string)
++ Sent (string)
++ NotDeliverable (string)
++ Opened (string)
++ ProviderError (string)
