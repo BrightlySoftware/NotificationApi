@@ -13,6 +13,9 @@ CSHARPDEFAULTNAMESPACE: DSI.SDK.Notification
 JAVADEFAULTNAMESPACE: io.dudesolutions.notification
 BRANDLABEL: Dude Solutions, Inc.
 USERAGENT: Dude SDK
+NULLIFY404: TRUE
+VALIDATEREQUIREDPARAMETERS: FALSE
+COLLECTPARAMETERS: TRUE
 
 # Dude Notification Api
 
@@ -39,7 +42,7 @@ In addition to standard response codes the response object returned from the ser
             "dudeReferenceId": "3523845A-4729-4CCB-9E16-01DEADF6C2DF",
             "stackTrace": "Null, Typically"
         }
-        
+
 ## Data Restriction
 Depending on the access level granted to the calling client certain data elements throughout this API will be removed and not returned.
 
@@ -228,19 +231,19 @@ Represents a notification request with base properties.
 + `triggeredBy`: System (string, required) - Whomever the request was triggered by.
 + `extraData` (object, required) - Dictionary of extra data on the request.
 + `recipients` (array[Recipient], optional) - The recipients of the request.
-+ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the request was created.
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - {DATETIME} The date time the request was created.
 
 ## Request (Base Request)
 Represents a notification request with properties required for a create.
 
 ### Properties
-+ `id`: 1 (number, required) - The ID of the request.
++ `id`: 1 (number, required) - {LONG} The ID of the request.
 
 ## Recipient (object)
 Represents a notification recipient.
 
 ### Properties
-+ `id`: 1 (number, required) - The ID of the recipient.
++ `id`: 1 (number, required) - {LONG} The ID of the recipient.
 + `userId`: 1 (number, required) - The third party system identifier of the recipient.
 + `firstName`: John (string, required) - The first name of the recipient.
 + `lastName`: Smith (string, required) - The last name of the recipient.
@@ -252,38 +255,42 @@ Represents a notification recipient.
 Represents a notification message with base properties.
 
 ### Properties
-+ `requestId`: 1 (number, required) - The ID of the notification request.
-+ `defaultTemplateId`: 1 (number, optional) - The ID of the template.
-+ `type`: None (enum[string], required) - The message type.
-    + `Email`
-+ `recipientId`: 1 (number, required) - The ID of the recipient.
-+ `status`: None (enum[string], required) - The notification status.
-    + `InternalQueued`
-    + `InternalError`
-    + `ProviderQueuePending`
-    + `ProviderQueued`
-    + `Sent`
-    + `NotDeliverable`
-    + `Opened`
-    + `ProviderError`
-+ `providerId`: 1 (number, optional) - The ID of the provider.
++ `requestId`: 1 (number, required) - {LONG} The ID of the notification request.
++ `defaultTemplateId`: 1 (number, optional) - {LONG} The ID of the template.
++ `type`: Email (Message Type, required) - The message type.
++ `recipientId`: 1 (number, required) - {LONG} The ID of the recipient.
++ `status`: InternalQueued (Message Status, required) - The notification status.
++ `providerId`: 1 (number, optional) - {INT} The ID of the provider.
 + `providerStatus`: none (string, required) - The status of the provider.
 + `providerErrorReason`: none (string, required) - The provider error reason.
 + `subject`: Msg Subject (string, required) - The subject of the message.
 + `body`: Hello World (string, required) - The body of the message.
-+ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - The date time the message was created
++ `created`: 2015-10-06T17:53:43.99Z (datetime, required) - {DATETIME} The date time the message was created
 
 ## Message (Base Message)
 Represents a notification messages with properties required for a create or update.
 
 ### Properties
-+ `id`: 1 (number, required) - The ID of the message.
++ `id`: 1 (number, required) - {LONG} The ID of the message.
 
 ## Template
 Represents a notification template.
 
 ### Properties
-+ `id`: 1 (number, required) - The ID of the message.
++ `id`: 1 (number, required) - {LONG} The ID of the message.
 + `type`: Email (string, required) - The type of the template.
 + `subject`: Msg Subject (string, required) - The subject of the template.
 + `body`: Hello World (string, required) - The body of the template.
+
+## Message Type (enum)
++ Email (string)
+
+## Message Status (enum)
++ InternalQueued (string)
++ InternalError (string)
++ ProviderQueuePending (string)
++ ProviderQueued (string)
++ Sent (string)
++ NotDeliverable (string)
++ Opened (string)
++ ProviderError (string)
